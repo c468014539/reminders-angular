@@ -1,15 +1,27 @@
-<div class="container py-4">
-    <h1 class="text-center mb-4">提醒事项</h1>
+<mat-toolbar color="primary">
+    <span>提醒事项</span>
+  </mat-toolbar>
   
-    <app-reminder-form
-      [editing]="editing"
-      (formSubmit)="handleSubmit($event)">
-    </app-reminder-form>
+  <div class="main-content">
+    <!-- 表单区域 -->
+    <mat-card class="form-card mat-elevation-z4">
+      <mat-card-content>
+        <app-reminder-form
+          [editing]="editing"
+          (formSubmit)="handleSubmit($event)">
+        </app-reminder-form>
+      </mat-card-content>
+    </mat-card>
   
-    <app-reminder-list
-      [reminders]="reminders"
-      (edit)="handleEdit($event)"
-      (delete)="handleDelete($event)">
-    </app-reminder-list>
+    <!-- 列表区域 -->
+    <mat-card class="list-card mat-elevation-z4">
+      <mat-card-content>
+        <app-reminder-list
+          [reminders]="reminders"
+          (edit)="handleEdit($event)"
+          (delete)="handleDelete($event)">
+        </app-reminder-list>
+      </mat-card-content>
+    </mat-card>
   </div>
   

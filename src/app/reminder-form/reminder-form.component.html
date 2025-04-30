@@ -1,53 +1,35 @@
-<div class="card mb-4 shadow-sm">
-    <div class="card-body">
-      <h5 class="card-title">{{ editing ? '更新提醒' : '添加新提醒' }}</h5>
-      <form [formGroup]="reminderForm" (ngSubmit)="onSubmit()">
-        <div class="mb-3">
-          <label for="title" class="form-label">标题</label>
-          <input
-            type="text"
-            id="title"
-            class="form-control"
-            formControlName="title"
-            placeholder="输入标题"
-          />
+<mat-card-header>
+    <mat-card-title>{{ editing ? '更新提醒' : '添加新提醒' }}</mat-card-title>
+</mat-card-header>
+
+<mat-card-content>
+    <form [formGroup]="reminderForm" (ngSubmit)="onSubmit()">
+        <div class="form-grid">
+            <mat-form-field appearance="fill">
+                <mat-label>标题</mat-label>
+                <input matInput placeholder="输入标题" formControlName="title" [errorStateMatcher]="matcher"/>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+                <mat-label>日期</mat-label>
+                <input matInput [matDatepicker]="picker" formControlName="date" [errorStateMatcher]="matcher"/>
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+                <mat-label>时间</mat-label>
+                <input matInput type="time" formControlName="time" />
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+                <mat-label>描述</mat-label>
+                <input matInput placeholder="输入描述" formControlName="description" />
+            </mat-form-field>
         </div>
-  
-        <div class="mb-3">
-          <label for="date" class="form-label">日期</label>
-          <input
-            type="date"
-            id="date"
-            class="form-control"
-            formControlName="date"
-          />
-        </div>
-  
-        <div class="mb-3">
-          <label for="time" class="form-label">时间</label>
-          <input
-            type="time"
-            id="time"
-            class="form-control"
-            formControlName="time"
-          />
-        </div>
-  
-        <div class="mb-3">
-          <label for="description" class="form-label">描述（可选）</label>
-          <input
-            type="text"
-            id="description"
-            class="form-control"
-            formControlName="description"
-            placeholder="输入描述"
-          />
-        </div>
-  
-        <button type="submit" class="btn btn-primary">
-          {{ editing ? '保存更改' : '添加提醒' }}
+
+        <button mat-raised-button color="primary" type="submit">
+            {{ editing ? '保存更改' : '添加提醒' }}
         </button>
-      </form>
-    </div>
-  </div>
-  
+    </form>
+</mat-card-content>

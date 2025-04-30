@@ -1,28 +1,38 @@
-<div *ngIf="!reminders.length" class="text-center text-muted">
-    暂无提醒事项
+<mat-form-field appearance="fill" class="search-bar">
+    <mat-label>搜索提醒</mat-label>
+    <input matInput placeholder="输入标题或描述" [formControl]="searchControl" />
+    <button mat-icon-button matSuffix *ngIf="searchControl.value" (click)="searchControl.setValue('')">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-form-field>
+  
+  <!-- 筛选选项 -->
+  <div class="filter-options">
+    <button mat-button (click)="onFilterChange('all')">全部</button>
+    <button mat-button (click)="onFilterChange('today')">今天</button>
+    <button mat-button (click)="onFilterChange('week')">本周</button>
+    <button mat-button (click)="onFilterChange('month')">本月</button>
   </div>
   
-  <div class="row row-cols-1 row-cols-md-2 g-4" *ngIf="reminders.length">
-    <div class="col" *ngFor="let r of reminders">
-      <div class="card h-100 shadow-sm">
-        <div class="card-body">
-          <h5 class="card-title">{{ r.title }}</h5>
-          <p class="card-text">
-            {{ r.description || '无描述' }}
-          </p>
-          <p class="card-text">
-            <small class="text-muted">{{ r.date }} {{ r.time }}</small>
-          </p>
-          <div class="d-flex justify-content-end">
-            <button class="btn btn-outline-secondary btn-sm me-2" (click)="onEdit(r)">
-              编辑
-            </button>
-            <button class="btn btn-outline-danger btn-sm" (click)="onDelete(r.id)">
-              删除
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+  <div *ngIf="!filteredReminders.length" class="text-center text-muted">
+    暂无匹配的提醒事项
+  </div>
+  
+  <div *ngIf="filteredReminders.length" class="reminder-grid">
+    <mat-card class="reminder-card mat-elevation-z3" *ngFor="let r of filteredReminders">
+      <mat-card-header>
+        <mat-card-title>{{ r.title }}</mat-card-title>
+      </mat-card-header>
+  
+      <mat-card-content>
+        <p>{{ r.description || '无描述' }}</p>
+        <p class="text-muted"><small>{{ r.date }} {{ r.time }}</small></p>
+      </mat-card-content>
+  
+      <mat-card-actions align="end">
+        <button mat-stroked-button color="primary" (click)="onEdit(r)">编辑</button>
+        <button mat-stroked-button color="warn" (click)="onDelete(r.id)">删除</button>
+      </mat-card-actions>
+    </mat-card>
   </div>
   

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ReminderService } from '../reminder.service';
 import { GoogleAuthService } from '../google-auth.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-main',
@@ -14,13 +15,14 @@ export class MainComponent implements OnInit {
 
   constructor(
     private reminderService: ReminderService,
-    private authService: GoogleAuthService
+    private authService: GoogleAuthService,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
     this.tokens = this.authService.getTokens();
     if (!this.tokens) {
-      // �@�ʖv�L�o?�A�����C??��
+      // 如果没有登录就跳走，逻辑可加
     } else {
       this.fetchAll();
     }
@@ -29,7 +31,7 @@ export class MainComponent implements OnInit {
   fetchAll() {
     this.reminderService.getReminders(this.tokens)
       .then(data => this.reminders = data)
-      .catch(e => console.error('��?��?', e));
+      .catch(() => this.snackBar.open('加载提醒失败', '关闭', { duration: 3000 }));
   }
 
   handleSubmit(form: any) {
@@ -38,9 +40,12 @@ export class MainComponent implements OnInit {
       : this.reminderService.addReminder({ ...form, id: this.getNewId() }, this.tokens);
 
     method.then(() => {
+      this.snackBar.open(this.editing ? '更新成功' : '添加成功', '关闭', { duration: 3000 });
       this.editing = null;
       this.fetchAll();
-    }).catch(e => console.error('�ۑ���?', e));
+    })
+    .catch(() => this.snackBar.open(this.editing ? '更新失败' : '添加失败', '关闭', { duration: 3000 }));
+
   }
 
   handleEdit(reminder: any) {
@@ -49,8 +54,11 @@ export class MainComponent implements OnInit {
 
   handleDelete(id: number) {
     this.reminderService.deleteReminder(id, this.tokens)
-      .then(() => this.fetchAll())
-      .catch(e => console.error('?����?', e));
+      .then(() => {
+        this.snackBar.open('删除成功', '关闭', { duration: 3000 });
+        this.fetchAll();
+      })
+      .catch(() => this.snackBar.open('删除失败', '关闭', { duration: 3000 }));
   }
 
   getNewId(): number {
