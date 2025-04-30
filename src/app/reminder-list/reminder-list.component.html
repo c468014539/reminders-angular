@@ -1,0 +1,28 @@
+<div *ngIf="!reminders.length" class="text-center text-muted">
+    暂无提醒事项
+  </div>
+  
+  <div class="row row-cols-1 row-cols-md-2 g-4" *ngIf="reminders.length">
+    <div class="col" *ngFor="let r of reminders">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">{{ r.title }}</h5>
+          <p class="card-text">
+            {{ r.description || '无描述' }}
+          </p>
+          <p class="card-text">
+            <small class="text-muted">{{ r.date }} {{ r.time }}</small>
+          </p>
+          <div class="d-flex justify-content-end">
+            <button class="btn btn-outline-secondary btn-sm me-2" (click)="onEdit(r)">
+              编辑
+            </button>
+            <button class="btn btn-outline-danger btn-sm" (click)="onDelete(r.id)">
+              删除
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

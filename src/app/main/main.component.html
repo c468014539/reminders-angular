@@ -1,0 +1,15 @@
+<div class="container py-4">
+    <h1 class="text-center mb-4">提醒事项</h1>
+  
+    <app-reminder-form
+      [editing]="editing"
+      (formSubmit)="handleSubmit($event)">
+    </app-reminder-form>
+  
+    <app-reminder-list
+      [reminders]="reminders"
+      (edit)="handleEdit($event)"
+      (delete)="handleDelete($event)">
+    </app-reminder-list>
+  </div>
+  

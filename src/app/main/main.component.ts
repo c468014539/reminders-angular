@@ -1,37 +1,35 @@
 import { Component, OnInit } from '@angular/core';
-import { GoogleAuthService } from './google-auth.service';
-import { ReminderService } from './reminder.service';
+import { ReminderService } from '../reminder.service';
+import { GoogleAuthService } from '../google-auth.service';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  selector: 'app-main',
+  templateUrl: './main.component.html',
+  styleUrls: ['./main.component.scss']
 })
-export class AppComponent implements OnInit {
+export class MainComponent implements OnInit {
   reminders: any[] = [];
   editing: any = null;
-  tokens: any = null;
+  tokens: any;
 
   constructor(
-    private authService: GoogleAuthService,
-    private reminderService: ReminderService
+    private reminderService: ReminderService,
+    private authService: GoogleAuthService
   ) {}
 
   ngOnInit(): void {
-    this.authService.init(tokens => {
-      this.tokens = tokens;
+    this.tokens = this.authService.getTokens();
+    if (!this.tokens) {
+      // ”@‰Ê–v—L“o?A’µ‘–C??‰Â‰Á
+    } else {
       this.fetchAll();
-    });
-  }
-
-  handleLogin() {
-    this.authService.login();
+    }
   }
 
   fetchAll() {
     this.reminderService.getReminders(this.tokens)
       .then(data => this.reminders = data)
-      .catch(e => console.error('? ‰Á?¸?', e));
+      .catch(e => console.error('‰Á?¸?', e));
   }
 
   handleSubmit(form: any) {
@@ -45,10 +43,6 @@ export class AppComponent implements OnInit {
     }).catch(e => console.error('•Û‘¶¸?', e));
   }
 
-  getNewId(): number {
-    return this.reminders.length ? Math.max(...this.reminders.map(r => r.id)) + 1 : 1;
-  }
-
   handleEdit(reminder: any) {
     this.editing = reminder;
   }
@@ -57,5 +51,9 @@ export class AppComponent implements OnInit {
     this.reminderService.deleteReminder(id, this.tokens)
       .then(() => this.fetchAll())
       .catch(e => console.error('?œ¸?', e));
+  }
+
+  getNewId(): number {
+    return this.reminders.length ? Math.max(...this.reminders.map(r => r.id)) + 1 : 1;
   }
 }
